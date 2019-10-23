@@ -1,4 +1,4 @@
-# [nealalan.github.io](https://nealalan.github.io)/[tf-201812-nealalan.com](https://nealalan.github.io/tf-201812-nealalan.com)
+# [nealalan.github.io](https://nealalan.github.io)/[tf-nealalan.com](https://github.com/nealalan/tf-nealalan.com)
 
 ## Project Goal
 - Fully automate the creation of an NGINX webserver running on AWS EC2.
@@ -24,10 +24,9 @@
   
 ## Files
 This repo contains two files:
-- [vpc.tf](https://github.com/nealalan/tf-201812-nealalan.com/blob/master/vpc.tf) - a consolidated terraform file (infrastructure as code) to create a VPC, associated components and an EC2 Ubuntu instance in a Public Subnet
-  - best practice is to separate out the terraform components into sections, but this worked out well for me to have it in one file
-  - need to implement the logic to automatically push (scp?) the install.sh file to the EC2 instance and run it automatically
-- [install.sh](https://github.com/nealalan/tf-201812-nealalan.com/blob/master/install.sh) - shell script to configure the Ubuntu instance to configure NGINX web server with secure websites (https)
+- .tf - terraform files (infrastructure as code) to create a VPC, associated components and an EC2 Ubuntu instance in a Public Subnet
+  - best practice is to separate out the terraform components into sections, 
+- [install.sh](https://github.com/nealalan/tf-nealalan.com/blob/master/install.sh) - shell script to configure the Ubuntu instance to configure NGINX web server with secure websites (https)
   - website are automatically pulled from git repos for respective sites
 
 ## Steps / Commands
@@ -37,7 +36,7 @@ I used...
 3. terraform plan
 4. terraform apply
 5. ssh -i priv_key.pem ubuntu@ip
-6. curl https://raw.githubusercontent.com/nealalan/tf-201812-nealalan.com/master/install.sh > install.sh
+6. curl https://raw.githubusercontent.com/nealalan/tf-nealalan.com/master/install.sh > install.sh
 7. chmod +x ./install.sh
 8. .install.sh
 
@@ -61,7 +60,7 @@ And setting it to have a Root PW...
 ```bash
 $ sudo apt install mariadb-client
 $ sudo apt install mariadb-server
-$ sudo passwd root (NealAlanDreher12)
+$ sudo passwd root 
 $ sudo mysql -u root
 # Disable plugin authentication for root
 > use mysql;
@@ -78,7 +77,7 @@ $ sudo mysql -u root -p
 ## Fixing Errors
 Within a few days I messed up my Ubuntu instance. The solution was clearly going to take longer than 15 minutes. So here's what I did, thanks to terraform:
 1. Grab what is managed by terraform
-![](https://github.com/nealalan/tf-201812-nealalan.com/blob/master/images/Screen%20Shot%202018-12-10%20at%209.19.52%20PM.jpg?raw=true)
+![](https://github.com/nealalan/tf-nealalan.com/blob/master/images/Screen%20Shot%202018-12-10%20at%209.19.52%20PM.jpg?raw=true)
 2. Mark the Ubuntu instance as tainted for destruction
 ```bash
 terraform taint aws_instance.wb
@@ -87,17 +86,17 @@ terraform taint aws_instance.wb
 ```bash
 $ terraform plan
 ```
-![](https://github.com/nealalan/tf-201812-nealalan.com/blob/master/images/Screen%20Shot%202018-12-10%20at%209.17.39%20PM.jpg?raw=true)
+![](https://github.com/nealalan/tf-nealalan.com/blob/master/images/Screen%20Shot%202018-12-10%20at%209.17.39%20PM.jpg?raw=true)
 4. Run!
 ```bash
 $ terraform apply
 ```
 5. Setup Ubuntu to host my webserver again
 ```bash
-$ curl https://raw.githubusercontent.com/nealalan/tf-201812-nealalan.com/master/install.sh > install.sh
+$ curl https://raw.githubusercontent.com/nealalan/tf-nealalan.com/master/install.sh > install.sh
 $ chmod +x ./install.sh
 $ .install.sh
 ```
-6. Consider using virtuanenv or even running another EC2 instance when I want to plan with some labs?!?!?! I can alwauys assign a subdomain to a lab instance.
+6. Consider using virtuanenv or even running another EC2 instance when I want to plan with some labs?!?!?! 
 
-[[edit](https://github.com/nealalan/tf-201812-nealalan.com/edit/master/README.md)]
+[[edit](https://github.com/nealalan/tf-nealalan.com/edit/master/README.md)]
