@@ -1,10 +1,13 @@
-# [nealalan.github.io](https://nealalan.github.io)/[tf-nealalan.com](https://github.com/nealalan/tf-nealalan.com)
+# [nealalan.github.io](https://nealalan.github.io)/[tf-nealalan.com](https://nealalan.github.io/tf-nealalan.com)
 
 ## Project Goal
 - Fully automate the creation of an NGINX webserver running on AWS EC2.
 - Stay security minded by restricting network access and creating a secure web server. 
 - Verify secure sites: [Sophos Security Headers Scanner](https://securityheaders.com/) and [SSL Labs test
 ](https://www.ssllabs.com/ssltest).
+
+## Project Status
+- Updated to Terraform v0.12 in August 2019
 
 ## Prereqs
 - See [https://nealalan.github.io/EC2_Ubuntu_LEMP/](https://nealalan.github.io/EC2_Ubuntu_LEMP/) project and go through the steps up until VPC, they include:
@@ -76,27 +79,33 @@ $ sudo mysql -u root -p
 
 ## Fixing Errors
 Within a few days I messed up my Ubuntu instance. The solution was clearly going to take longer than 15 minutes. So here's what I did, thanks to terraform:
+
 1. Grab what is managed by terraform
 ![](https://github.com/nealalan/tf-nealalan.com/blob/master/images/Screen%20Shot%202018-12-10%20at%209.19.52%20PM.jpg?raw=true)
+
 2. Mark the Ubuntu instance as tainted for destruction
 ```bash
 terraform taint aws_instance.wb
 ```
+
 3. Verify what will happen (a side effect was my ACLs and SGs will be cleaned up since I was running an outdated lab that requried me to open some ports)
 ```bash
 $ terraform plan
 ```
 ![](https://github.com/nealalan/tf-nealalan.com/blob/master/images/Screen%20Shot%202018-12-10%20at%209.17.39%20PM.jpg?raw=true)
+
 4. Run!
 ```bash
 $ terraform apply
 ```
+
 5. Setup Ubuntu to host my webserver again
 ```bash
 $ curl https://raw.githubusercontent.com/nealalan/tf-nealalan.com/master/install.sh > install.sh
 $ chmod +x ./install.sh
 $ .install.sh
 ```
+
 6. Consider using virtuanenv or even running another EC2 instance when I want to plan with some labs?!?!?! 
 
 [[edit](https://github.com/nealalan/tf-nealalan.com/edit/master/README.md)]

@@ -3,9 +3,10 @@
 ###############################################################################
 ### Neal Dreher / nealalan.com / nealalan.github.io/tf-201812-nealalan.com
 ### Recreate nealalan.* & neonaluminum.* on Ubuntu (AWS EC2)
-### 2018-12-06
+### 2018-12-06 UPDATES 2019-11-20
 ###
-### Something I like to do after install is edit the ~/.bashrc PS1= statment to include (\D{%F %T}) at the beginning
+### Something I like to do after install is edit the ~/.bashrc PS1= AND STAR
+###  a terminal session with $ pm2 status
 ###
 ### UPDATES
 ### - added additional subdomains and node and pm2
@@ -58,12 +59,7 @@ sudo tee -a /home/ubuntu/sites-available/nealalan.com << END
 server {
 	listen 80;
 	server_name nealalan.com www.nealalan.com;
-	if ($host = nealalan.com) {
-		return 301 https://$host$request_uri;
-  }
-  if ($host = www.nealalan.com) {
-		return 301 https://$host$request_uri;
-  }
+	return 301 https://$host$request_uri;
 }
 server {
 	listen 443 ssl;
@@ -84,7 +80,7 @@ server {
 	# referrer policy
 	add_header Referrer-Policy "no-referrer-when-downgrade";
 	# webappsec-feature-policy
-	Feature-Policy: microphone 'none'; camera 'none'; notifications 'none'; push 'none'
+	#Feature-Policy: microphone 'none'; camera 'none'; notifications 'none'; push 'none'
 	# certificate transparency, See: https://thecustomizewindows.com/2017/04/new-security-header-expect-ct-header-nginx-directive/
 	add_header Expect-CT max-age=3600;
 	# HTML folder
@@ -97,12 +93,7 @@ sudo tee -a /home/ubuntu/sites-available/neonaluminum.com << END
 server {
 	listen 80;
 	server_name neonaluminum.com www.neonaluminum.com;
-	if ($host = neonaluminum.com) {
-			return 301 https://$host$request_uri;
-	}
-	if ($host = www.neonaluminum.com) {
-		return 301 https://$host$request_uri;
-	}
+	return 301 https://$host$request_uri;
 }
 server {
 	listen 443 ssl;
@@ -123,7 +114,7 @@ server {
 	# referrer policy
 	add_header Referrer-Policy "no-referrer-when-downgrade";
 	# webappsec-feature-policy
-	Feature-Policy: microphone 'none'; camera 'none'; notifications 'none'; push 'none'
+	#Feature-Policy: microphone 'none'; camera 'none'; notifications 'none'; push 'none'
 	# certificate transparency, See: https://thecustomizewindows.com/2017/04/new-security-header-expect-ct-header-nginx-directive/
 	add_header Expect-CT max-age=3600;
 	# HTML folder
@@ -135,10 +126,15 @@ END
 sudo tee -a /home/ubuntu/sites-available/fire.neonaluminum.com << END
 server {
 	listen 80;
-	server_name fire.neonaluminum.com;
-  if ($host = fire.neonaluminum.com) {
-    return 301 https://$host$request_uri;
+	server_name clear.fire.neonaluminum.com fire.neonaluminum.com;
+  	return 301 https://$host$request_uri;
   }
+}
+server {
+	server_name clear.fire.neonaluminum.com
+	listen 443 ssl;
+	root /var/www/neonaluminum.com/html;
+	index index.html
 }
 server {
 	listen 443 ssl;
@@ -155,12 +151,22 @@ server {
 		proxy_set_header X-Real-IP $remote_addr;
 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 	}
+	location /cta/ {
+		# reverse proxy and serve the app
+		proxy_pass http://localhost:8082/;
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection 'upgrade';
+		proxy_set_header Host $host;
+		proxy_set_header X-Forwarded-Proto $scheme;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	}
 END
 sudo tee -a /home/ubuntu/sites-available/ozark.neonaluminum.com << END
 server {
 	listen 80;
 	server_name ozark.neonaluminum.com;
-  if ($host = ozark.neonaluminum.com) {
     return 301 https://$host$request_uri;
   }
 }
@@ -187,21 +193,8 @@ sudo rm /home/ubuntu/sites-enabled/default
 echo "CREATING LINKS TO NGINX CONFIG FILES"
 sudo ln -s /etc/nginx/sites-available/nealalan.com /etc/nginx/sites-enabled/
 sudo ln -s /etc/nginx/sites-available/neonaluminum.com /etc/nginx/sites-enabled/
-
-# restart NGINX
-echo "REBOOTING NGINX"
-sudo systemctl restart nginx
-
-# RUN CERTBOT for all domains
-#   https://certbot.eff.org/docs/using.html#certbot-commands
-#
-# Note: if you missed some and need to run again you will need to run 'ps aux' to get
-#       the nginx process and use 'sudo kill <pid>' on the nginx main process
-#       Next, run the same command with --expand on the end
-echo "RUN CERTBOT ON ALL DOMAINS"echo "sudo certbot --authenticator standalone --installer nginx -d nealalan.com -d www.nealalan.com -d neonaluminum.com -d www.neonaluminum.com -d fire.neonaluminum.com -d ozark.neonaluminum.com --pre-hook 'sudo service nginx stop' --post-hook 'sudo service nginx start' -m neal@nealalan.com --agree-tos --eff-email --redirect -q"
-sudo certbot --authenticator standalone --installer nginx -d nealalan.com -d www.nealalan.com -d neonaluminum.com -d www.neonaluminum.com -d fire.neonaluminum.com -d ozark.neonaluminum.com --pre-hook 'sudo service nginx stop' --post-hook 'sudo service nginx start' -m neal@nealalan.com --agree-tos --eff-email --redirect -q
-echo "REBOOTING NGINX"
-sudo systemctl restart nginx
+sudo ln -s /etc/nginx/sites-available/fire.neonaluminum.com /etc/nginx/sites-enabled
+sudo ln -s /etc/nginx/sites-available/ozark.neonaluminum.com /etc/nginx/sites-enabled
 
 # Ensure the latest git api is installed
 sudo apt install -y git
@@ -252,5 +245,28 @@ pm2 ls
 # INSTALL OTHER UTILS
 sudo apt install -y speedtest-cli
 
-# OPTIONAL
-#sudo reboot
+###############################################################################
+# CERTBOT MAY FAIL, IF I AM REBUILDING THE ENVIRONMENT
+#   So I can't use --authenticator standalone
+#         1) I NEED TO CREATE AN "ACME VERIFICATION" DNS TXT RECORD 
+#         2) WAIT FOR THE RECORD TO DEPLAY (CAN TEXT IN ROUTE 53)
+#         3) LET CERTBOT CONTINUE WITH THE VERIFICATION
+###############################################################################
+
+# restart NGINX
+echo "REBOOTING NGINX"
+sudo nginx -s reload
+
+# RUN CERTBOT for all domains
+#   https://certbot.eff.org/docs/using.html#certbot-commands
+#
+# Note: if you missed some and need to run again you will need to run 'ps aux' to get
+#       the nginx process and use 'sudo kill <pid>' on the nginx main process
+#       Next, run the same command with --expand on the end
+
+echo "RUN CERTBOT ON ALL DOMAINS"
+sudo certbot --authenticator standalone --installer nginx -d nealalan.com,*.nealalan.com,neonaluminum.com,*.neonaluminum.com,*.fire.neonaluminum.com --pre-hook 'sudo service nginx stop' --post-hook 'sudo service nginx start' -m nad80@yahoo.com --agree-tos --eff-email --redirect -q
+
+echo "REBOOTING NGINX"
+#sudo systemctl restart nginx
+sudo nginx -s reload
