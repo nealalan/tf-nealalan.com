@@ -201,8 +201,10 @@ sudo apt install -y git
 
 # pull the websites from github down to the webserver
 echo "CLONING nealalan.com, neonaluminum.com"
-git clone https://github.com/nealalan/nealalan.com.git /home/ubuntu/nealalan.com
-git clone https://github.com/nealalan/neonaluminum.com.git /home/ubuntu/neonaluminum.com
+sudo git clone https://github.com/nealalan/nealalan.com.git /home/ubuntu/nealalan.com
+sudo git clone https://github.com/nealalan/neonaluminum.com.git /home/ubuntu/neonaluminum.com
+sudo git clone https://github.com/nealalan/fire.neonaluminum.com.git /home/ubuntu/fire.neonaluminum.com
+
 
 # INSTALL NODEJS
 # install nodejs LTS versions - apt will not do this!
@@ -213,16 +215,16 @@ sudo apt install -y nodejs gcc g++ make build-essential
 sudo apt autoremove -y
 
 # create hello.js
-echo "CREATING hello.js"
-sudo tee -a /home/ubuntu/sites-available/fire.neonaluminum.com/hello.js << END
-#!/usr/bin/env nodejs
-var http = require('http');
-http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hello World\n');
-}).listen(8080, 'localhost');
-console.log('Server running at http://localhost:8080/');
-END
+# echo "CREATING hello.js"
+# sudo tee -a /home/ubuntu/sites-available/fire.neonaluminum.com/hello.js << END
+# #!/usr/bin/env nodejs
+# var http = require('http');
+# http.createServer(function (req, res) {
+#   res.writeHead(200, {'Content-Type': 'text/plain'});
+#   res.end('Hello World\n');
+# }).listen(8080, 'localhost');
+# console.log('Server running at http://localhost:8080/');
+# END
 
 # install the latest version of PM2 to manage production nodejs apps
 echo "INSTALLING PM2"
@@ -235,6 +237,7 @@ sudo npm install pm2@latest -g
 #   ALSO: pm2 monit | info <id> | stop <id> | start <path>
 
 pm2 start /home/ubuntu/sites-available/fire.neonaluminum.com/hello.js
+pm2 start /home/ubuntu/sites-available/fire.neonaluminum.com/cta.py --name cta.py --interpreter=python3
 pm2 startup systemd
 sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u ubuntu -hp /home/ubuntu
 pm2 save
