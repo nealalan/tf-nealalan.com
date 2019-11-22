@@ -54,11 +54,16 @@
 # CHANGE 2019-07-03 
 #   Setup the Cloudwatch Alarm to reboot an unreachable web server
 #   Separated into individual files (not a monolith!!!)
+#
+# CHANGE 2019-11-21 
+#   t2.mirco is $10/mo so changing to t2.nano for < $5/mo
+#   treat an instance like cattle, not like a pet!
+#     Ubuntu Server 18.04 LTS (HVM), SSD Volume Type - ami-0d5d9d301c853a04a 
 ###############################################################################
 # Variables
 ###############################################################################
 variable "project_name" {
-  default = "nealalan-com-201812v2"
+  default = "nealalan-com-201911"
 }
 variable "author_name" {
   default = "terraform"
@@ -66,6 +71,10 @@ variable "author_name" {
 variable "acl_name" {
   default = "nealalan.com_acl"
 }
+variable "domain_name" {
+  default = "nealalan.com"
+}
+
 ### local machine variables!!!!
 variable "pub_key_path" {
   ## generated from private key using 
@@ -95,7 +104,7 @@ variable "instance_assigned_elastic_ip_cidr" {
   default = "18.223.13.99/32"
 }
 variable "add_my_inbound_ip_cidr" {
-  default = "73.95.223.217/32"
+  default = "72.182.97.142/32"
 }
 variable "aws_region" {
   # Note: us-east-2	= OHIO
@@ -117,10 +126,10 @@ variable "subnet_2_cidr" {
   default = "172.17.2.0/24"
 }
 variable "subnet_1_name" {
-  default = "Public Subnet nealalan-com-201812v2"
+  default = "Public Subnet nealalan-com-201911"
 }
 variable "subnet_2_name" {
-  default = "Private Subnet nealalan-com-201812v2"
+  default = "Private Subnet nealalan-com-201911"
 }
 variable "pub_key_name" {
   description = "Public key stored in EC2"
@@ -129,5 +138,9 @@ variable "pub_key_name" {
 # ami is the "ID" of the OS installed on the instance
 variable "ami" {
   description = "Ubuntu Server 18.04 LTS"
-  default = "ami-0f65671a86f061fcd"
+  default = "ami-0d5d9d301c853a04a"
+}
+# NOTE: t2.nano is 1/2 the price of t2.micro, but micro is in free tier
+variable "instance_type" {
+  default = "t2.nano"
 }

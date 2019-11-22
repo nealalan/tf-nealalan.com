@@ -16,7 +16,7 @@ resource "aws_key_pair" "default" {
 ###############################################################################
 resource "aws_instance" "wb" {
     ami  = "${var.ami}"
-    instance_type = "t2.micro"
+    instance_type = "${var.instance_type}"
     key_name = "${var.pub_key_name}"
     subnet_id = "${aws_subnet.subnet-1.id}"
     vpc_security_group_ids = ["${aws_security_group.sgpub.id}",
@@ -52,24 +52,43 @@ resource "aws_eip_association" "static_ip" {
 }
 
 ###############################################################################
-# 14 : Create CloudWatch Alarm to restart the instance if unreachable
+# WAIT : Create CloudWatch Alarm to restart the instance if unreachable
 ###############################################################################
-resource "aws_cloudwatch_metric_alarm" "autorecover" {
-  alarm_name          = "ec2-autorecover-High-Status-Check-Failed"
-  namespace           = "AWS/EC2"
-  evaluation_periods  = "2"
-  period              = "60"
-  alarm_description   = "This metric auto recovers EC2 instances"
-  alarm_actions       = ["arn:aws:automate:${var.aws_region}:ec2:reboot"]
-  statistic           = "Maximum"
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  threshold           = "1"
-  metric_name         = "StatusCheckFailed"
-  dimensions = {
-    InstanceId = "${aws_instance.wb.id}"
-  }
-  tags = {
-    Name = "CloudWatch Alarm EC2 Instance Unreachable"
-    Author = "${var.author_name}"
-  }
-}
+# resource "aws_cloudwatch_metric_alarm" "autorecover" {
+#   alarm_name          = "ec2-autorecover-High-Status-Check-Failed"
+#   namespace           = "AWS/EC2"
+#   evaluation_periods  = "2"
+#   period              = "60"
+#   alarm_description   = "This metric auto recovers EC2 instances"
+#   alarm_actions       = ["arn:aws:automate:${var.aws_region}:ec2:reboot"]
+#   statistic           = "Maximum"
+#   comparison_operator = "GreaterThanOrEqualToThreshold"
+#   threshold           = "1"
+#   metric_name         = "StatusCheckFailed"
+#   dimensions = {
+#     #InstanceId = "${aws_instance.wb.id}"
+#     HealthCheckId           = "${aws_route53_health_check.port443_health_check.id}"
+#   }
+#   tags = {
+#     #Name = "CloudWatch Alarm EC2 Instance Unreachable"
+#     Name = "CW Alarm - EC2 Port 443 Unreachable"
+#     Author = "${var.author_name}"
+#   }
+# }
+###############################################################################
+# WAIT : Don't want to apply these until webserver is up and running! 
+#        port 443 won't be avail on the domain until the server is configured!
+###############################################################################
+# resource "aws_route53_health_check" "port443_health_check" {
+#   fqdn              = "${var.domain_name}"
+#   port              = 443
+#   type              = "HTTPS"
+#   resource_path     = "/"
+#   failure_threshold = "5"
+#   request_interval  = "30"
+
+#   tags = {
+#     Name = "tf-test-health-check"
+#     Author = "${var.author_name}"
+#   }
+# }

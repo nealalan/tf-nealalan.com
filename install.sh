@@ -245,6 +245,9 @@ sudo chown ubuntu:ubuntu /home/ubuntu/.pm2/rpc.sock /home/neal/.pm2/pub.sock
 pm2 ls
 
 
+sudo echo PS1="(\D{%F %T}) \[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ " >> ~/.bashrc
+sudo echo ifconfig.co >> ~/.bashrc
+
 # INSTALL OTHER UTILS
 sudo apt install -y speedtest-cli
 
