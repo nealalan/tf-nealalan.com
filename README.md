@@ -71,6 +71,9 @@ One issue I ran into is I created my own SG that I continually wanted to use. On
 
 If I kill an instance and only want to recreate a new version of it with no changes, terraform will not do this smoothly. I need to manually go to Console > EC2 > Actions > Networking > Manually Disassociation Elastic IP Address. This forces a change to the EC2 instance that terraform knows it can only fix by creating a new instance.
 
+### CERTBOT ISSUES
+
+This looks promising, but requires a script to give the EC2 instance access to the Route 53 DNS records to create a TXT record for verification. https://certbot-dns-route53.readthedocs.io/en/stable/ In the meantime, I will just use the [manual](https://certbot.eff.org/docs/using.html#manual) method.
 
 ### ACLs
 As you move around you'llneed to log in to the AWS Console and add your local IP address to the EC2: Network ACLs. Here's an example of one I had in the past...
