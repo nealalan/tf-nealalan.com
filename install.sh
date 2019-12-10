@@ -3,7 +3,7 @@
 ###############################################################################
 ### Neal Dreher / nealalan.com / nealalan.github.io/tf-201812-nealalan.com
 ### Recreate nealalan.* & neonaluminum.* on Ubuntu (AWS EC2)
-### 2018-12-06 UPDATES 2019-11-20
+### 2018-12-06 UPDATES 2019-11-20, 2019-12-09
 ###
 ### Something I like to do after install is edit the ~/.bashrc PS1= AND STAR
 ###  a terminal session with $ pm2 status
@@ -266,7 +266,7 @@ sudo pm2 ls
 
 # ADD TO .BASHRC
 echo "INSTALL.SH >>> ADD NEW PS1"
-sudo echo PS1="(\D{%F %T}) \[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ " >> ~/.bashrc
+sudo echo PS1=\'(\D{%F %T}) \[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ \' >> ~/.bashrc
 sudo echo "curl ifconfig.co" >> ~/.bashrc
 
 # INSTALL OTHER UTILS
@@ -294,6 +294,7 @@ sudo nginx -s reload
 
 echo "INSTALL.SH >>> RUN CERTBOT ON ALL DOMAINS"
 echo " THIS MAY NEED TO BE DONE MANUALLY USING"
+echo 'sudo certbot --installer nginx -d nealalan.com,*.nealalan.com,neonaluminum.com,*.neonaluminum.com,*.fire.neonaluminum.com --pre-hook 'sudo service nginx stop' --post-hook 'sudo service nginx start' -m nad80@yahoo.com --agree-tos --eff-email --redirect --manual'
 
 # sudo certbot --authenticator standalone --installer nginx -d nealalan.com,*.nealalan.com,neonaluminum.com,*.neonaluminum.com,*.fire.neonaluminum.com --pre-hook 'sudo service nginx stop' --post-hook 'sudo service nginx start' -m nad80@yahoo.com --agree-tos --eff-email --redirect
 
