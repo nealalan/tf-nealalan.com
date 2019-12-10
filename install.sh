@@ -266,7 +266,7 @@ sudo pm2 ls
 
 # ADD TO .BASHRC
 echo "INSTALL.SH >>> ADD NEW PS1"
-sudo echo PS1=\'(\D{%F %T}) \[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ \' >> ~/.bashrc
+sudo echo PS1='(\D{%F %T}) \[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ ' >> ~/.bashrc
 sudo echo "curl ifconfig.co" >> ~/.bashrc
 
 # INSTALL OTHER UTILS
