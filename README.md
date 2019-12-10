@@ -44,9 +44,9 @@ $ ssh -i priv_key.pem ubuntu@ip
 Connected to instance: I've noticed this is best done manually versus passing into as user params. If something fails or a dialogue pops up, you want to be able to respond!
 
 ```bash
-6. curl https://raw.githubusercontent.com/nealalan/tf-nealalan.com/master/install.sh > install.sh
-7. chmod +x ./install.sh
-8. .install.sh
+$ curl https://raw.githubusercontent.com/nealalan/tf-nealalan.com/master/install.sh > install.sh
+$ chmod +x ./install.sh
+$ ./install.sh
 ```
 
 Optional, to destroy the infrastructure:
@@ -60,8 +60,20 @@ My server is at static IP [18.223.13.99](http://18.223.13.99) serving [https://n
 
 ![](https://raw.githubusercontent.com/nealalan/EC2_Ubuntu_LEMP/master/sites-as-https.png)
 
-## NEXT STEPS
-As you move around you'll need to log in to the AWS Console and add your local IP address to the EC2: Network ACLs. Here's an example of one I had in the past...
+
+
+## NEXT STEPS & OTHER NOTES ON PROBLEMS
+### Precreated SGs
+
+One issue I ran into is I created my own SG that I continually wanted to use. Once the EC2 instance is created, I go to Console > EC2 > Actions > Networking > SGs to add mine.
+
+### Killing and recreating instances
+
+If I kill an instance and only want to recreate a new version of it with no changes, terraform will not do this smoothly. I need to manually go to Console > EC2 > Actions > Networking > Manually Disassociation Elastic IP Address. This forces a change to the EC2 instance that terraform knows it can only fix by creating a new instance.
+
+
+### ACLs
+As you move around you'llneed to log in to the AWS Console and add your local IP address to the EC2: Network ACLs. Here's an example of one I had in the past...
 ![](https://raw.githubusercontent.com/nealalan/EC2_Ubuntu_LEMP/master/ACLsshlist.png)
 Also, I now have the flexibility to totally recreate the websever through a few small script changes if I make major site changes, add a new domain name or need to upgrade to the latest LTS of Ubuntu.
 
