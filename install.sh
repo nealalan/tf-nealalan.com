@@ -105,7 +105,10 @@ sudo tee -a /home/ubuntu/sites-available/neonaluminum.com << END
 server {
 	listen 80;
 	server_name neonaluminum.com www.neonaluminum.com;
-	return 301 https://\$host\$request_uri;
+	# HTML folder for use by certbot, if necessary.
+	# certbot will automatically convert to a redirect 
+	root /var/www/neonaluminum.com/html;
+	index index.html;
 }
 server {
 	listen 443 ssl;
@@ -136,11 +139,6 @@ server {
 END
 
 sudo tee -a /home/ubuntu/sites-available/fire.neonaluminum.com << END
-server {
-	listen 80;
-	server_name clear.fire.neonaluminum.com fire.neonaluminum.com;
-  	return 301 https://\$host\$request_uri;
-}
 server {
 	server_name clear.fire.neonaluminum.com;
 	listen 443 ssl;
@@ -176,11 +174,6 @@ server {
 }
 END
 sudo tee -a /home/ubuntu/sites-available/ozark.neonaluminum.com << END
-server {
-	listen 80;
-	server_name ozark.neonaluminum.com;
-    	return 301 https://\$host\$request_uri;
-}
 server {
 	listen 443 ssl;
   	server_name ozark.neonaluminum.com;
@@ -316,7 +309,7 @@ echo "INSTALL.SH >>> RUN CERTBOT ON ALL DOMAINS"
 echo " THIS MAY NEED TO BE DONE MANUALLY USING"
 echo 'sudo certbot --installer nginx -d nealalan.com,*.nealalan.com,neonaluminum.com,*.neonaluminum.com,*.fire.neonaluminum.com --pre-hook 'sudo service nginx stop' --post-hook 'sudo service nginx start' -m nad80@yahoo.com --agree-tos --eff-email --redirect --manual'
 
-# sudo certbot --authenticator standalone --installer nginx -d nealalan.com,*.nealalan.com,neonaluminum.com,*.neonaluminum.com,*.fire.neonaluminum.com --pre-hook 'sudo service nginx stop' --post-hook 'sudo service nginx start' -m nad80@yahoo.com --agree-tos --eff-email --redirect
+# sudo certbot --authenticator standalone --installer nginx -d nealalan.com,*.nealalan.com,neonaluminum.com,*.neonaluminum.com,*.fire.neonaluminum.com -m nad80@yahoo.com --agree-tos --eff-email --redirect
 
 #echo "INSTALL.SH >>> REBOOTING NGINX"
 #sudo systemctl restart nginx
