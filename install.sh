@@ -13,6 +13,7 @@
 ###############################################################################
 
 ## check for remote package updated and refresh the local package reference
+echo "INSTALL.SH >>> UPDATE & UPGRADE"
 sudo apt -y update
 sudo apt -y upgrade
 
@@ -20,9 +21,11 @@ sudo apt -y upgrade
 sudo apt install -y nginx
 
 # overwrite the generic ip-###-##-##-### hostname
+echo "INSTALL.SH >>> CHANGE HOSTNAME TO NEALALAN.COM"
 echo "nealalan.com" | sudo tee /etc/hostname
 
 # add domain names as localhosts
+echo "INSTALL.SH >>> ADD DOMAINS TO /etc/hosts"
 sudo sed -i '1s/^/127.0.0.1 ozark.neonaluminum.com\n/' /etc/hosts
 sudo sed -i '1s/^/127.0.0.1 fire.neonaluminum.com\n/' /etc/hosts
 sudo sed -i '1s/^/127.0.0.1 www.neonaluminum.com\n/' /etc/hosts
@@ -31,12 +34,16 @@ sudo sed -i '1s/^/127.0.0.1 www.nealalan.com\n/' /etc/hosts
 sudo sed -i '1s/^/127.0.0.1 nealalan.com\n/' /etc/hosts
 
 # certbot
+echo "INSTALL.SH >>> INSTALL CERTBOT"
 sudo add-apt-repository -y ppa:certbot/certbot
 sudo apt -y update
 sudo apt -y upgrade
 sudo apt -y install python-certbot-nginx
+echo "INSTALL.SH >>> CERTBOT VERSION"
+certbot --version
 
 # Configure NGINX webserver files
+echo "INSTALL.SH >>> CREATING WWW FOLDERS & LINKING TO ~/ FOLDER"
 sudo mkdir -p /var/www/nealalan.com/html
 sudo mkdir -p /var/www/neonaluminum.com/html
 sudo mkdir -p /var/www/fire.neonaluminum.com
@@ -55,11 +62,12 @@ sudo chown -R ubuntu:ubuntu /var/www/ozark.neonaluminum.com
 ln -s /etc/nginx/sites-available /home/ubuntu/sites-available
 ln -s /etc/nginx/sites-enabled /home/ubuntu/sites-enabled
 
+echo "INSTALL.SH >>> CREATING NGINX CONFIGURATION FILES"
 sudo tee -a /home/ubuntu/sites-available/nealalan.com << END
 server {
 	listen 80;
 	server_name nealalan.com www.nealalan.com;
-	return 301 https://$host$request_uri;
+	return 301 https://\$host\$request_uri;
 }
 server {
 	listen 443 ssl;
@@ -93,7 +101,7 @@ sudo tee -a /home/ubuntu/sites-available/neonaluminum.com << END
 server {
 	listen 80;
 	server_name neonaluminum.com www.neonaluminum.com;
-	return 301 https://$host$request_uri;
+	return 301 https://\$host\$request_uri;
 }
 server {
 	listen 443 ssl;
@@ -127,7 +135,7 @@ sudo tee -a /home/ubuntu/sites-available/fire.neonaluminum.com << END
 server {
 	listen 80;
 	server_name clear.fire.neonaluminum.com fire.neonaluminum.com;
-  	return 301 https://$host$request_uri;
+  	return 301 https://\$host\$request_uri;
   }
 }
 server {
@@ -144,30 +152,30 @@ server {
 		# reverse proxy and serve the app
 		proxy_pass http://localhost:8080/;
 		proxy_http_version 1.1;
-		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Upgrade \$http_upgrade;
 		proxy_set_header Connection 'upgrade';
-		proxy_set_header Host $host;
-		proxy_set_header X-Forwarded-Proto $scheme;
-		proxy_set_header X-Real-IP $remote_addr;
-		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Host \$host;
+		proxy_set_header X-Forwarded-Proto \$scheme;
+		proxy_set_header X-Real-IP \$remote_addr;
+		proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
 	}
 	location /cta/ {
 		# reverse proxy and serve the app
 		proxy_pass http://localhost:8082/;
 		proxy_http_version 1.1;
-		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Upgrade \$http_upgrade;
 		proxy_set_header Connection 'upgrade';
-		proxy_set_header Host $host;
-		proxy_set_header X-Forwarded-Proto $scheme;
-		proxy_set_header X-Real-IP $remote_addr;
-		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Host \$host;
+		proxy_set_header X-Forwarded-Proto \$scheme;
+		proxy_set_header X-Real-IP \$remote_addr;
+		proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
 	}
 END
 sudo tee -a /home/ubuntu/sites-available/ozark.neonaluminum.com << END
 server {
 	listen 80;
 	server_name ozark.neonaluminum.com;
-    return 301 https://$host$request_uri;
+    return 301 https://\$host\$request_uri;
   }
 }
 server {
@@ -178,40 +186,42 @@ server {
 		# reverse proxy and serve the app
 		proxy_pass http://localhost:8081/;
 		proxy_http_version 1.1;
-		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Upgrade \$http_upgrade;
 		proxy_set_header Connection 'upgrade';
-		proxy_set_header Host $host;
-		proxy_set_header X-Forwarded-Proto $scheme;
-		proxy_set_header X-Real-IP $remote_addr;
-		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Host \$host;
+		proxy_set_header X-Forwarded-Proto \$scheme;
+		proxy_set_header X-Real-IP \$remote_addr;
+		proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
 	}
 END
 
+echo "INSTALL.SH >>> DELETING NGINX DEFAULT CONFIGURATION FROM SITES-ENABLED"
 sudo rm /home/ubuntu/sites-enabled/default
 
 # CREATE LINKS FROM SITES-AVAILABLE TO SITES-ENABLED
-echo "CREATING LINKS TO NGINX CONFIG FILES"
+echo "INSTALL.SH >>> CREATING LINKS FROM SITES-AVAILABLE TO SITES-ENABLED"
 sudo ln -s /etc/nginx/sites-available/nealalan.com /etc/nginx/sites-enabled/
 sudo ln -s /etc/nginx/sites-available/neonaluminum.com /etc/nginx/sites-enabled/
 sudo ln -s /etc/nginx/sites-available/fire.neonaluminum.com /etc/nginx/sites-enabled
 sudo ln -s /etc/nginx/sites-available/ozark.neonaluminum.com /etc/nginx/sites-enabled
 
 # Ensure the latest git api is installed
+echo "INSTALL.SH >>> INSTALL LATEST VERSION OF GIT"
 sudo apt install -y git
 
 # pull the websites from github down to the webserver
-echo "CLONING nealalan.com, neonaluminum.com"
+echo "INSTALL.SH >>> CLONING WEBSITES FROM GITHUB"
 sudo git clone https://github.com/nealalan/nealalan.com.git /home/ubuntu/nealalan.com
 sudo git clone https://github.com/nealalan/neonaluminum.com.git /home/ubuntu/neonaluminum.com
 sudo git clone https://github.com/nealalan/fire.neonaluminum.com.git /home/ubuntu/fire.neonaluminum.com
 
-
 # INSTALL NODEJS
 # install nodejs LTS versions - apt will not do this!
 ##sudo apt -y install nodejs npm
-echo "INSTALLING NODE v12"
+echo "INSTALL.SH >>> INSTALLING NODE v12"
 curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 sudo apt install -y nodejs gcc g++ make build-essential
+echo "INSTALL.SH >>> AUTOREMOVING DEPRICATED PACKAGES"
 sudo apt autoremove -y
 
 # create hello.js
@@ -227,7 +237,7 @@ sudo apt autoremove -y
 # END
 
 # install the latest version of PM2 to manage production nodejs apps
-echo "INSTALLING PM2"
+echo "INSTALL.SH >>> INSTALLING pm2@latest GLOBALLY"
 sudo npm install pm2@latest -g
 
 # SETUP PM2
@@ -236,19 +246,31 @@ sudo npm install pm2@latest -g
 # - list pm2 processes
 #   ALSO: pm2 monit | info <id> | stop <id> | start <path>
 
-pm2 start /home/ubuntu/sites-available/fire.neonaluminum.com/hello.js
-pm2 start /home/ubuntu/sites-available/fire.neonaluminum.com/cta.py --name cta.py --interpreter=python3
-pm2 startup systemd
-sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u ubuntu -hp /home/ubuntu
-pm2 save
-sudo chown ubuntu:ubuntu /home/ubuntu/.pm2/rpc.sock /home/neal/.pm2/pub.sock
-pm2 ls
+echo "INSTALL.SH >>> PM2 START HELLO.JS"
+sudo pm2 start /home/ubuntu/fire.neonaluminum.com/hello.js
+echo "INSTALL.SH >>> PM2 START CTA.PY"
+sudo pm2 start /home/ubuntu/fire.neonaluminum.com/cta.py --name cta.py --interpreter=python3
+echo "INSTALL.SH >>> PM2 STARTUP SYSTEMD"
+sudo pm2 startup systemd
+echo "INSTALL.SH >>> ADD PM2 TO SYSTEM PATH"
+export PATH="$PATH:/usr/lib/node_modules/pm2/bin/pm2"
+echo $PATH
+echo "INSTALL.SH >>> STARTUP SYSTEMD"
+sudo startup systemd -u ubuntu -hp /home/ubuntu
+echo "INSTALL.SH >>> PM2 SAVE"
+sudo pm2 save
+echo "INSTALL.SH >>> SET PM2 OWNER TO ubuntu:ubuntu"
+sudo chown ubuntu:ubuntu /home/ubuntu/.pm2/rpc.sock /home/ubuntu/.pm2/pub.sock
+echo "INSTALL.SH >>> PM2 LS"
+sudo pm2 ls
 
-
+# ADD TO .BASHRC
+echo "INSTALL.SH >>> ADD NEW PS1"
 sudo echo PS1="(\D{%F %T}) \[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ " >> ~/.bashrc
-sudo echo ifconfig.co >> ~/.bashrc
+sudo echo "curl ifconfig.co" >> ~/.bashrc
 
 # INSTALL OTHER UTILS
+echo "INSTALL.SH >>> INSTALL SPEEDTEST-CLI"
 sudo apt install -y speedtest-cli
 
 ###############################################################################
@@ -260,7 +282,7 @@ sudo apt install -y speedtest-cli
 ###############################################################################
 
 # restart NGINX
-echo "REBOOTING NGINX"
+echo "INSTALL.SH >>> REBOOTING NGINX"
 sudo nginx -s reload
 
 # RUN CERTBOT for all domains
@@ -270,9 +292,9 @@ sudo nginx -s reload
 #       the nginx process and use 'sudo kill <pid>' on the nginx main process
 #       Next, run the same command with --expand on the end
 
-echo "RUN CERTBOT ON ALL DOMAINS"
+echo "INSTALL.SH >>> RUN CERTBOT ON ALL DOMAINS"
 sudo certbot --authenticator standalone --installer nginx -d nealalan.com,*.nealalan.com,neonaluminum.com,*.neonaluminum.com,*.fire.neonaluminum.com --pre-hook 'sudo service nginx stop' --post-hook 'sudo service nginx start' -m nad80@yahoo.com --agree-tos --eff-email --redirect -q
 
-echo "REBOOTING NGINX"
+echo "INSTALL.SH >>> REBOOTING NGINX"
 #sudo systemctl restart nginx
 sudo nginx -s reload
