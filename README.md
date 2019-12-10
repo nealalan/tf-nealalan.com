@@ -47,6 +47,8 @@ Connected to instance: I've noticed this is best done manually versus passing in
 $ curl https://raw.githubusercontent.com/nealalan/tf-nealalan.com/master/install.sh > install.sh
 $ chmod +x ./install.sh
 $ ./install.sh
+# *** MANUALLY RUN CERTBOT IF NECESSARY *** 
+$ sudo certbot --installer nginx -d nealalan.com,*.nealalan.com,neonaluminum.com,*.neonaluminum.com,*.fire.neonaluminum.com --pre-hook 'sudo service nginx stop' --post-hook 'sudo service nginx start' --email nad80@yahoo.com --agree-tos --eff-email --redirect --manual
 ```
 
 Optional, to destroy the infrastructure:
@@ -76,7 +78,7 @@ If I kill an instance and only want to recreate a new version of it with no chan
 This looks promising, but requires a script to give the EC2 instance access to the Route 53 DNS records to create a TXT record for verification. https://certbot-dns-route53.readthedocs.io/en/stable/ In the meantime, I will just use the [manual](https://certbot.eff.org/docs/using.html#manual) method.
 
 ```bash
-sudo certbot --installer nginx -d nealalan.com,*.nealalan.com,neonaluminum.com,*.neonaluminum.com,*.fire.neonaluminum.com --pre-hook 'sudo service nginx stop' --post-hook 'sudo service nginx start' --email nad80@yahoo.com --agree-tos --eff-email --redirect --manual'
+sudo certbot --installer nginx -d nealalan.com,*.nealalan.com,neonaluminum.com,*.neonaluminum.com,*.fire.neonaluminum.com --pre-hook 'sudo service nginx stop' --post-hook 'sudo service nginx start' --email nad80@yahoo.com --agree-tos --eff-email --redirect --manual
 ```
 * --manual = allows for a TXT DNS record to be created (this is because of using wildcard domains I think)
 * --redirect =  Automatically redirect all HTTP traffic to HTTPS for the newly authenticated vhost
