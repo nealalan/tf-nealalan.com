@@ -136,13 +136,12 @@ server {
 	listen 80;
 	server_name clear.fire.neonaluminum.com fire.neonaluminum.com;
   	return 301 https://\$host\$request_uri;
-  }
 }
 server {
-	server_name clear.fire.neonaluminum.com
+	server_name clear.fire.neonaluminum.com;
 	listen 443 ssl;
 	root /var/www/neonaluminum.com/html;
-	index index.html
+	index index.html;
 }
 server {
 	listen 443 ssl;
@@ -170,13 +169,13 @@ server {
 		proxy_set_header X-Real-IP \$remote_addr;
 		proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
 	}
+}
 END
 sudo tee -a /home/ubuntu/sites-available/ozark.neonaluminum.com << END
 server {
 	listen 80;
 	server_name ozark.neonaluminum.com;
-    return 301 https://\$host\$request_uri;
-  }
+    	return 301 https://\$host\$request_uri;
 }
 server {
 	listen 443 ssl;
@@ -193,6 +192,7 @@ server {
 		proxy_set_header X-Real-IP \$remote_addr;
 		proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
 	}
+}
 END
 
 echo "INSTALL.SH >>> DELETING NGINX DEFAULT CONFIGURATION FROM SITES-ENABLED"
@@ -293,8 +293,10 @@ sudo nginx -s reload
 #       Next, run the same command with --expand on the end
 
 echo "INSTALL.SH >>> RUN CERTBOT ON ALL DOMAINS"
-sudo certbot --authenticator standalone --installer nginx -d nealalan.com,*.nealalan.com,neonaluminum.com,*.neonaluminum.com,*.fire.neonaluminum.com --pre-hook 'sudo service nginx stop' --post-hook 'sudo service nginx start' -m nad80@yahoo.com --agree-tos --eff-email --redirect -q
+echo " THIS MAY NEED TO BE DONE MANUALLY USING"
 
-echo "INSTALL.SH >>> REBOOTING NGINX"
+# sudo certbot --authenticator standalone --installer nginx -d nealalan.com,*.nealalan.com,neonaluminum.com,*.neonaluminum.com,*.fire.neonaluminum.com --pre-hook 'sudo service nginx stop' --post-hook 'sudo service nginx start' -m nad80@yahoo.com --agree-tos --eff-email --redirect
+
+#echo "INSTALL.SH >>> REBOOTING NGINX"
 #sudo systemctl restart nginx
-sudo nginx -s reload
+s#udo nginx -s reload
