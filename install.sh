@@ -67,7 +67,11 @@ sudo tee -a /home/ubuntu/sites-available/nealalan.com << END
 server {
 	listen 80;
 	server_name nealalan.com www.nealalan.com;
-	return 301 https://\$host\$request_uri;
+	#return 301 https://\$host\$request_uri;
+	# HTML folder for use by certbot, if necessary.
+	# certbot will automatically convert to a redirect 
+	root /var/www/nealalan.com/html;
+	index index.html;
 }
 server {
 	listen 443 ssl;
@@ -268,9 +272,16 @@ echo "INSTALL.SH >>> PM2 LS"
 sudo pm2 ls
 
 # ADD TO .BASHRC
-echo "INSTALL.SH >>> ADD NEW PS1"
+echo "INSTALL.SH >>> ADD NEW PS1 & COMMANDS to BASHRC"
 sudo echo PS1='(\D{%F %T}) \[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ ' >> ~/.bashrc
+sudo echo " " >> ~/.bashrc
 sudo echo "curl ifconfig.co" >> ~/.bashrc
+sudo echo " " >> ~/.bashrc
+sudo echo "\"echo RESTART NGINX:       $ sudo nginx -s reload\"" >> ~/.bashrc
+sudo echo "\"echo RESTART INSTANCE:    $ sudo reboot\"" >> ~/.bashrc
+sudo echo "\"echo RUNNING APPS:        $ pm2 status\"" >> ~/.bashrc
+sudo echo "\"echo                      $ pm2 monit\"" >> ~/.bashrc
+
 
 # INSTALL OTHER UTILS
 echo "INSTALL.SH >>> INSTALL SPEEDTEST-CLI"
