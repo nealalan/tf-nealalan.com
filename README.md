@@ -1,7 +1,7 @@
 # [nealalan.github.io](https://nealalan.github.io)/[tf-nealalan.com](https://nealalan.github.io/tf-nealalan.com)
 
 ## Project Goal
-- Fully automate the creation of an NGINX webserver running on AWS EC2.
+- Automate the creation AWS Infrastructure and an NGINX webserver running on Ubuntu. (Certbot steps might need to be manually run.)
 - Stay security minded by restricting network access and creating a secure web server. 
 - Verify secure sites: [Sophos Security Headers Scanner](https://securityheaders.com/) and [SSL Labs test
 ](https://www.ssllabs.com/ssltest).
