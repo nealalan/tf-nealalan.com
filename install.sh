@@ -239,6 +239,9 @@ sudo apt autoremove -y
 # install the latest version of PM2 to manage production nodejs apps
 echo "INSTALL.SH >>> INSTALLING pm2@latest GLOBALLY"
 sudo npm install pm2@latest -g
+echo "INSTALL.SH >>> INSTALLING PYTHON3 PIP AND FLASK
+sudo apt install python3-pip
+pip3 install flask
 
 # SETUP PM2
 # - start PM2 & set it up to automatically start on system reboot
@@ -279,11 +282,17 @@ sudo apt install -y speedtest-cli
 #         1) I NEED TO CREATE AN "ACME VERIFICATION" DNS TXT RECORD 
 #         2) WAIT FOR THE RECORD TO DEPLAY (CAN TEXT IN ROUTE 53)
 #         3) LET CERTBOT CONTINUE WITH THE VERIFICATION
+#  AND A NEW COMPLICATION!!!
+#   CERTBOT IS NOT REQUIRING THE TXT DNS RECORDS AND A TEXT HASH IN A PORT 80
+#   WEB FOLDER
+#         4) Change NGINX config file to allow port 80 responses other than 301
+#         5) Create the apprioriate files, restart nginx
+#         6) let certbot complete
 ###############################################################################
 
 # restart NGINX
-echo "INSTALL.SH >>> REBOOTING NGINX"
-sudo nginx -s reload
+#echo "INSTALL.SH >>> REBOOTING NGINX"
+# sudo nginx -s reload
 
 # RUN CERTBOT for all domains
 #   https://certbot.eff.org/docs/using.html#certbot-commands
@@ -300,4 +309,4 @@ echo 'sudo certbot --installer nginx -d nealalan.com,*.nealalan.com,neonaluminum
 
 #echo "INSTALL.SH >>> REBOOTING NGINX"
 #sudo systemctl restart nginx
-s#udo nginx -s reload
+#sudo nginx -s reload
