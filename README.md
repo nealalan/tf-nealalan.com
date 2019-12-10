@@ -8,6 +8,7 @@
 
 ## Project Status
 - Updated to Terraform v0.12 in August 2019
+- Reapplied to convert from T2.micro to T2.nano
 
 ## Prereqs
 - See [https://nealalan.github.io/EC2_Ubuntu_LEMP/](https://nealalan.github.io/EC2_Ubuntu_LEMP/) project and go through the steps up until VPC, they include:
@@ -26,27 +27,33 @@
   - Github installed
   
 ## Files
-This repo contains two files:
-- .tf - terraform files (infrastructure as code) to create a VPC, associated components and an EC2 Ubuntu instance in a Public Subnet
-  - best practice is to separate out the terraform components into sections, 
-- [install.sh](https://github.com/nealalan/tf-nealalan.com/blob/master/install.sh) - shell script to configure the Ubuntu instance to configure NGINX web server with secure websites (https)
-  - website are automatically pulled from git repos for respective sites
+This repo contains two types of files:
+- .tf - terraform files (infrastructure as code) to create a VPC, associated components and an EC2 Ubuntu instance in a Public Subnet (best practice is to separate out the terraform components into sections) 
+- [install.sh](https://github.com/nealalan/tf-nealalan.com/blob/master/install.sh) - shell script to configure the Ubuntu instance to configure NGINX web server with secure websites (https) - The website are automatically pulled from git repos for respective sites.
 
 ## Steps / Commands
-I used... 
-1. git clone this repo
-2. terraform init
-3. terraform plan
-4. terraform apply
-5. ssh -i priv_key.pem ubuntu@ip
+Locally:
+```bash
+$ git clone this repo
+$ terraform init
+$ terraform plan
+$ terraform apply
+$ ssh -i priv_key.pem ubuntu@ip
+```
+
+Connected to instance: I've noticed this is best done manually versus passing into as user params. If something fails or a dialogue pops up, you want to be able to respond!
+
+```bash
 6. curl https://raw.githubusercontent.com/nealalan/tf-nealalan.com/master/install.sh > install.sh
 7. chmod +x ./install.sh
 8. .install.sh
+```
 
-Optional:
-- terraform plan -destroy
-- terraform destroy
-
+Optional, to destroy the infrastructure:
+```bash
+$ terraform plan -destroy
+$ terraform destroy
+```
 
 ## Result
 My server is at static IP [18.223.13.99](http://18.223.13.99) serving [https://nealalan.com](https://nealalan.com) and [https://neonaluminum.com](https://neonaluminum.com) with redirects from all http:// addresses
