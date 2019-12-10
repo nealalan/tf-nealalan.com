@@ -75,6 +75,12 @@ If I kill an instance and only want to recreate a new version of it with no chan
 
 This looks promising, but requires a script to give the EC2 instance access to the Route 53 DNS records to create a TXT record for verification. https://certbot-dns-route53.readthedocs.io/en/stable/ In the meantime, I will just use the [manual](https://certbot.eff.org/docs/using.html#manual) method.
 
+```bash
+sudo certbot --installer nginx -d nealalan.com,*.nealalan.com,neonaluminum.com,*.neonaluminum.com,*.fire.neonaluminum.com --pre-hook 'sudo service nginx stop' --post-hook 'sudo service nginx start' --email nad80@yahoo.com --agree-tos --eff-email --redirect --manual'
+```
+* --manual = allows for a TXT DNS record to be created (this is because of using wildcard domains I think)
+* --redirect =  Automatically redirect all HTTP traffic to HTTPS for the newly authenticated vhost
+
 ### ACLs
 As you move around you'llneed to log in to the AWS Console and add your local IP address to the EC2: Network ACLs. Here's an example of one I had in the past...
 ![](https://raw.githubusercontent.com/nealalan/EC2_Ubuntu_LEMP/master/ACLsshlist.png)
