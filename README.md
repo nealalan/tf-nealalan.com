@@ -48,7 +48,8 @@ $ curl https://raw.githubusercontent.com/nealalan/tf-nealalan.com/master/install
 $ chmod +x ./install.sh
 $ ./install.sh
 # *** MANUALLY RUN CERTBOT IF NECESSARY *** 
-$ sudo certbot --installer nginx -d nealalan.com,*.nealalan.com,neonaluminum.com,*.neonaluminum.com,*.fire.neonaluminum.com --pre-hook 'sudo service nginx stop' --post-hook 'sudo service nginx start' --email nad80@yahoo.com --agree-tos --eff-email --redirect --manual
+$ sudo certbot --installer nginx -d nealalan.com,*.nealalan.com,neonaluminum.com,*.neonaluminum.com,*.fire.neonaluminum.com --email nad80@yahoo.com --agree-tos --eff-email --redirect --manual
+# sudo nginx -s reload
 ```
 
 Optional, to destroy the infrastructure:
