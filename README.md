@@ -65,6 +65,16 @@ My server is at static IP [18.223.13.99](http://18.223.13.99) serving [https://n
 
 
 ## NEXT STEPS & OTHER NOTES ON PROBLEMS
+
+### pm2 python app errors
+I ran into an issue with using python3. To see what the error is in PM2, I can use `$ pm2 log 1` for process 1.
+
+To resolve, installed the appropriate library:
+```bash
+sudo apt install python3-pip
+pip3 install flask
+```
+
 ### Precreated SGs
 
 One issue I ran into is I created my own SG that I continually wanted to use. Once the EC2 instance is created, I go to Console > EC2 > Actions > Networking > SGs to add mine.
@@ -107,7 +117,7 @@ $ sudo mysql -u root
 $ sudo mysql -u root -p
 ```
 
-## Fixing Errors
+## Fixing Errors in Terraform
 Within a few days I messed up my Ubuntu instance. The solution was clearly going to take longer than 15 minutes. So here's what I did, thanks to terraform:
 
 1. Grab what is managed by terraform
