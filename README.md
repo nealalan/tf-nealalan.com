@@ -30,6 +30,7 @@
 This repo contains two types of files:
 - .tf - terraform files (infrastructure as code) to create a VPC, associated components and an EC2 Ubuntu instance in a Public Subnet (best practice is to separate out the terraform components into sections) 
 - [install.sh](https://github.com/nealalan/tf-nealalan.com/blob/master/install.sh) - shell script to configure the Ubuntu instance to configure NGINX web server with secure websites (https) - The website are automatically pulled from git repos for respective sites.
+- ~/.aws/neals_web_server.pub - need the public key installed on the server to ssh in
 
 ## Steps / Commands
 Locally:
