@@ -1,7 +1,7 @@
 ###############################################################################
-### Neal Dreher / nealalan.com / nealalan.github.io/tf-201812-nealalan.com
+### Neal Dreher / nealalan.com / nealalan.github.io/tf-nealalan.com
 ### Recreate nealalan.* & neonaluminum.*
-### 2018-12-05
+### 2020-05-12
 ###
 ### A good help:
 ###   https://hackernoon.com/manage-aws-vpc-as-infrastructure-as-code-with-
@@ -43,6 +43,9 @@
 #  $ .install.sh
 #
 ###############################################################################
+# CHANGE 2020-05-12
+#  Put server back, using Ubuntu 20
+#
 # CHANGE 2019-05-23
 #  Changed SSH access control from the Network ACL to a separate SG
 #   to allow better visibility to access control at the instance level
@@ -63,7 +66,7 @@
 # Variables
 ###############################################################################
 variable "project_name" {
-  default = "nealalan-com-201911"
+  default = "nealalan-com-202005"
 }
 variable "author_name" {
   default = "terraform"
@@ -104,7 +107,7 @@ variable "instance_assigned_elastic_ip_cidr" {
   default = "18.223.13.99/32"
 }
 variable "add_my_inbound_ip_cidr" {
-  default = "72.182.97.142/32"
+  default = "0.0.0.0/32"
 }
 variable "aws_region" {
   # Note: us-east-2	= OHIO
@@ -126,19 +129,21 @@ variable "subnet_2_cidr" {
   default = "172.17.2.0/24"
 }
 variable "subnet_1_name" {
-  default = "Public Subnet nealalan-com-201911"
+  default = "Public Subnet nealalan-com-202005"
 }
 variable "subnet_2_name" {
-  default = "Private Subnet nealalan-com-201911"
+  default = "Private Subnet nealalan-com-202005"
 }
 variable "pub_key_name" {
   description = "Public key stored in EC2"
   default = "neals_web_server"
 }
 # ami is the "ID" of the OS installed on the instance
+# "Ubuntu Server 20.04 LTS" "ami-0e84e211558a022c0" 
+# "Ubuntu Server 18.04 LTS" "ami-0d5d9d301c853a04a"
 variable "ami" {
-  description = "Ubuntu Server 18.04 LTS"
-  default = "ami-0d5d9d301c853a04a"
+  description = "Ubuntu Server 20.04 LTS"
+  default = "ami-0e84e211558a022c0"
 }
 # NOTE: t2.nano is 1/2 the price of t2.micro, but micro is in free tier
 variable "instance_type" {
